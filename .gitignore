@@ -3,3 +3,4 @@ whisper-base-ar-quran/*
 *.mp3
 use-whisper/*
 blob
+quran.json
