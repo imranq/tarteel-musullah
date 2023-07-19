@@ -1,1 +1,4 @@
 whisper-base-ar-quran/*
+*.m4a
+*.mp3
+use-whisper/*

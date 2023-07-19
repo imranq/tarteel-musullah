@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AyatDetect</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 40px;
+    }
+
+    #controls {
+      margin: 40px 0;
+    }
+
+    #status {
+      margin-top: 40px;
+      font-weight: bold;
+    }
+
+    #transcript {
+      margin-top: 40px;
+      font-size: 20px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>AyatDetect</h1>
+
+  <div id="controls">
+    <button id="startButton">Start Recording</button>
+    <button id="stopButton">Stop Recording</button>
+  </div>
+
+
+  <div id="status">Status: Idle</div>
+  <audio id="recordedAudio" controls style="display: none;"></audio>
+
+  <div id="transcript"></div>
+
+  <script>
+    const startButton = document.getElementById('startButton');
+    const stopButton = document.getElementById('stopButton');
+    const status = document.getElementById('status');
+    const transcript = document.getElementById('transcript');
+    const recordedAudio = document.getElementById('recordedAudio');
+    
+
+    let stream;
+    let mediaRecorder;
+    let chunks = [];
+    var chunkSize = 0;
+    let processIntervalId;
+
+    const handleDataAvailable = (event) => {
+      chunks.push(event.data);
+    };
+
+    const handleStart = () => {
+        chunks = [];
+        chunkSize = 0;
+        transcript.textContent = '';
+        status.textContent = 'Status: Recording...';
+        startButton.disabled = true;
+        stopButton.disabled = false;
+        recordedAudio.style.display = 'none';
+      
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                mediaRecorder = new MediaRecorder(stream)
+                mediaRecorder.ondataavailable = (blobEvent) => {
+                  console.log('got data', blobEvent);
+                  var blob = blobEvent.data;
+                  chunkSize += blob.size;
+                  chunks.push(blob);
+                }
+
+                mediaRecorder.onstop = (blobEvent) => {
+                  console.log("data available after MediaRecorder.stop() called.");
+                  console.log(blobEvent)
+
+                  recordedAudio.style.display = "block"
+                  recordedAudio.controls = true;
+
+                  var blob = new Blob(chunks, { type: "audio/wav; codecs=opus" });
+                  console.log(chunkSize)
+
+                  const formData = new FormData();
+                  formData.append("audio_data", blob);
+
+                  fetch("http://127.0.0.1:5000/transcribe", {
+                    method: "POST",
+                    body: formData,
+                  });
+
+
+
+                  const audioURL = window.URL.createObjectURL(blob);
+                  recordedAudio.src = audioURL;
+                  console.log("recorder stopped");
+                };
+                mediaRecorder.start();
+
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
+    const handleStop = () => {
+        status.textContent = 'Status: Processing...';
+        startButton.disabled = false;
+        stopButton.disabled = true;
+        mediaRecorder.stop()
+    };
+
+
+    startButton.addEventListener('click', () => {
+        handleStart();
+    });
+
+    stopButton.addEventListener('click', () => {
+      handleStop();
+    });
+  </script>
+</body>
+</html>
