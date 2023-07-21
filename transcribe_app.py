@@ -8,7 +8,7 @@ import numpy as np
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 
-from utils import get_close_matches_indexes, get_compiled_quran
+from utils import get_close_matches_rapidfuzz, get_compiled_quran
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -54,7 +54,7 @@ def transcribe():
     decoded_ids = processor.tokenizer.batch_decode(predicted_ids)
 
     tarteel_string = re.sub(r'<[^>]*>', '', decoded_ids[0])
-    score, ayat_start, ayat_end = get_close_matches_indexes(tarteel_string, ayat_arr, ayat_info)
+    score, ayat_start, ayat_end = get_close_matches_rapidfuzz(tarteel_string, ayat_arr, ayat_info)
     
     return jsonify({
         "score": score,
