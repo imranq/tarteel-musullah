@@ -1,40 +1,43 @@
-from difflib import SequenceMatcher
-from heapq import nlargest as _nlargest
+from cdifflib import CSequenceMatcher
 import json
 
-def get_close_matches_indexes(word, possibilities, n=3, cutoff=0.6):
-    """Use SequenceMatcher to return a list of the indexes of the best 
-    "good enough" matches. word is a sequence for which close matches 
-    are desired (typically a string).
-    possibilities is a list of sequences against which to match word
-    (typically a list of strings).
-    Optional arg n (default 3) is the maximum number of close matches to
-    return.  n must be > 0.
-    Optional arg cutoff (default 0.6) is a float in [0, 1].  Possibilities
-    that don't score at least that similar to word are ignored.
-    """
-
-    if not n >  0:
-        raise ValueError("n must be > 0: %r" % (n,))
-    if not 0.0 <= cutoff <= 1.0:
-        raise ValueError("cutoff must be in [0.0, 1.0]: %r" % (cutoff,))
+def get_close_matches_indexes(phrase, ayat_arr, ayat_info, n=1):
     result = []
-    s = SequenceMatcher()
-    s.set_seq2(word)
-    for idx, x in enumerate(possibilities):
-        s.set_seq1(x)
-        if s.real_quick_ratio() >= cutoff and \
-           s.quick_ratio() >= cutoff and \
-           s.ratio() >= cutoff:
-            result.append((s.ratio(), idx))
+    s = CSequenceMatcher()
+    s.set_seq2(phrase)
+    corpus =  " ".join(ayat_arr)
+    current_ayat = 0
+    char_count = 0
+    current_ratio = 0
+    for x in range(len(corpus)-len(phrase)):
+        test_phrase = corpus[x: x+len(phrase)]
+        s.set_seq1(test_phrase)
 
-    # Move the best scorers to head of list
-    result = _nlargest(n, result)
+        if x > char_count + len(ayat_arr[current_ayat]):
+            current_ayat += 1
+            char_count = x
+        
+        temp_ratio = s.ratio()
+        if current_ratio < temp_ratio:
+            result.append((temp_ratio, current_ayat))
+            current_ratio = temp_ratio
+            print(current_ratio, ayat_info[current_ayat])
 
-    return result
+    score, idx = result[-1]
+    
+    end_idx = idx-1
+    target_char_count = char_count + len(phrase)
+    char_x = char_count
 
-def get_compiled_quran():
-    quranjson = json.load(open("quran.json", "r", encoding="utf-8"))
+    while char_x < target_char_count:
+        char_x += len(ayat_arr[end_idx])
+        end_idx += 1
+        
+
+    return score, ayat_info[idx], ayat_info[end_idx]
+
+def get_compiled_quran(quran_fn):
+    quranjson = json.load(open(quran_fn, "r", encoding="utf-8"))
     ayat_arr = []
     ayat_info = []
     for surah in quranjson:
@@ -46,3 +49,6 @@ def get_compiled_quran():
             })
             ayat_arr.append(ayat["text"])
     return ayat_arr, ayat_info
+
+
+    
