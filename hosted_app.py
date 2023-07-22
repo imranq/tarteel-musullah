@@ -6,11 +6,11 @@ import time
 import rapidfuzz
 import openai
 import os
+import json
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 
-from utils import get_close_matches_rapidfuzz, get_compiled_quran
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -24,9 +24,20 @@ def get_transcription(audio_fn):
     transcript = openai.Audio.transcribe('whisper-1', audio_file, language="ar")
     return transcript["text"]
         
+quranjson = json.load(open("assets/quran.json", "r", encoding="utf-8"))
+ayat_arr = []
+ayat_info = []
+for surah in quranjson:
+    surah_name = surah["transliteration"]
+    surah_id = surah["id"]
+    for ayat in surah["verses"]:
+        ayat_info.append({
+            "surah_name": surah_name,
+            "surah_id": surah_id,
+            "ayat_number": ayat["id"]
+        })
+        ayat_arr.append(ayat["text"])
 
-
-ayat_arr, ayat_info = get_compiled_quran("assets/quran.json")
 quran_all = " ".join(ayat_arr)
 print("Server ready")
 
