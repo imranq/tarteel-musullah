@@ -4,3 +4,4 @@ whisper-base-ar-quran/*
 use-whisper/*
 blob
 quran.json
+openai-api-testing.ipynb
