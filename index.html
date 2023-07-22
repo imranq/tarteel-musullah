@@ -73,7 +73,7 @@
                   const formData = new FormData();
                   formData.append("audio_data", blob);
 
-                  fetch("http://127.0.0.1:5000/transcribe", {
+                  fetch("http://ec2-3-92-207-212.compute-1.amazonaws.com:5000/transcribe", {
                     method: "POST",
                     body: formData,
                   })

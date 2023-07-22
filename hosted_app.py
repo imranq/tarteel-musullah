@@ -41,6 +41,13 @@ for surah in quranjson:
 quran_all = " ".join(ayat_arr)
 print("Server ready")
 
+
+@app.route("/", methods=["GET"])
+def home():
+    return "DetectAyat Inference Server"
+
+
+
 @app.route("/transcribe", methods=["POST"])
 def transcribe():
     # Check if the request contains audio data
