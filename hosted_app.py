@@ -12,7 +12,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 cors = CORS(app)
 
 
@@ -44,8 +44,7 @@ print("Server ready")
 
 @app.route("/", methods=["GET"])
 def home():
-    return "DetectAyat Inference Server"
-
+    return app.send_static_file('index.html')
 
 
 @app.route("/transcribe", methods=["POST"])
@@ -115,4 +114,4 @@ def transcribe():
     })
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0")
