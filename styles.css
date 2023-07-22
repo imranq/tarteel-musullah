@@ -1,0 +1,100 @@
+* {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f2f2f2;
+    color: #333;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+  }
+
+  a {
+    font-family: Arial, sans-serif;
+    color: #3498db; 
+    text-decoration: none;
+    font-size: 36px;
+    transition: color 0.3s ease-in-out;
+  }
+
+  a:hover {
+      color: #2ecc71;
+  }
+
+  a:active {
+      color: #e74c3c;
+  }
+
+  a:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.5); /* matching the initial color for better accessibility */
+  }
+  
+
+  h1 {
+    padding: 50px 0;
+    font-size: 2em;
+    color: #333;
+    /* text-shadow: 2px 2px 4px rgba(0,0,0,0.5); */
+  }
+
+  #status {
+    margin-top: 40px;
+    font-weight: bold;
+    font-size: 20px;
+    color: #4CAF50;
+  }
+
+  #intro {
+        font-family: 'Roboto', sans-serif; /* Assuming you have imported the 'Roboto' font */
+        color: #34495e;
+        background: lavender;
+        font-size: 1.5em; /* Adjust size as needed */
+        text-align: center;
+        margin-bottom: 20px; /* Adds some space below the title */
+        letter-spacing: 2px;
+    }
+    
+
+  #transcript, #start_ayat, #end_ayat, #score {
+    margin-top: 40px;
+    font-size: 18px;
+    background: #fff;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+    padding: 20px;
+    border-radius: 5px;
+  }
+
+  audio {
+    margin: auto;
+    width: 80%;
+  }
+
+  #controls button {
+    background-color: #4CAF50;
+    border: 2px solid #4CAF50;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+  }
+  
+  #controls button:active {
+    background-color: #45a049;
+  }
+  
+  #controls button:disabled {
+    background-color: #ddd;
+    color: #666;
+    border-color: #ccc;
+    cursor: not-allowed;
+  }
+  

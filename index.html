@@ -1,36 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AyatDetect</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
+  <title>AyatDetect - MCGP Invention Club</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
 
-    h1 {
-      margin-top: 40px;
-    }
-
-    #controls {
-      margin: 40px 0;
-    }
-
-    #status {
-      margin-top: 40px;
-      font-weight: bold;
-    }
-
-    #transcript {
-      margin-top: 40px;
-      font-size: 20px;
-      white-space: pre-wrap;
-    }
-  </style>
 </head>
 <body>
   <h1>AyatDetect</h1>
-
+  <div id="intro">Salaam! Please record a short snippet of Qur'an and get the detected ayat</div>
   <div id="controls">
     <button id="startButton">Start Recording</button>
     <button id="stopButton">Stop Recording</button>
@@ -40,18 +17,17 @@
   <div id="status">Status: Idle</div>
   <audio id="recordedAudio" controls style="display: none;"></audio>
 
-  <div id="start_ayat"></div>
-  <div id="end_ayat"></div>
-  <div id="score"></div>
+  <a id="detected_passage" target="_blank" href="#"></a>
+  <div id="output"></div>
 
   <script>
     const startButton = document.getElementById('startButton');
     const stopButton = document.getElementById('stopButton');
     const status = document.getElementById('status');
-    const startAyat = document.getElementById('start_ayat');
-    const endAyat = document.getElementById('end_ayat');
-    const score = document.getElementById('score');
+    const output = document.getElementById('output');
     const recordedAudio = document.getElementById('recordedAudio');
+    const detected_passage = document.getElementById('detected_passage');
+
     
 
     let stream;
@@ -67,13 +43,12 @@
     const handleStart = () => {
         chunks = [];
         chunkSize = 0;
-        startAyat.textContent = '';
-        endAyat.textContent = '';
-        score.textContent = '';
+        output.textContent = '';
         status.textContent = 'Status: Recording...';
         startButton.disabled = true;
         stopButton.disabled = false;
         recordedAudio.style.display = 'none';
+        detected_passage.innerHTML = '';
       
         navigator.mediaDevices.getUserMedia({ audio: true })
             .then(stream => {
@@ -105,9 +80,38 @@
                   .then(response => response.json())
                   .then(result => {
                       console.log(result);
-                      startAyat.innerHTML = JSON.stringify(result["start"], null, 2);
-                      endAyat.innerHTML = JSON.stringify(result["end"], null, 2);
-                      score.innerHTML = JSON.stringify(result["score"], null, 2);
+                      sn1 = result["start"]["surah_name"]
+                      sn1_id = result["start"]["surah_id"]
+                      sn2 = result["end"]["surah_name"]
+                      n1 = result["start"]["ayat_number"]
+                      n2 = result["end"]["ayat_number"]
+                      output.innerHTML = `
+                      <p>Detected String: ${result["string"]}</p>
+                      \n\n
+                      <p>Start: ${sn1} ${n1} </p>
+                      \n
+                      <p>End: ${sn2} ${n2} </p>
+                      `;
+                      status.textContent = 'Status: Idle';
+                      
+
+                      if (sn1 != sn2) {
+                        detected_passage.innerHTML = `Passage goes between surahs. See output below`
+                        detected_passage.setAttribute("href", `#`)
+                        detected_passage.setAttribute("target", '')
+                      } else {
+                        if (n1 == n2) {
+                          detected_passage.innerHTML = `Surah ${sn1}, Ayat ${n1}`
+                          detected_passage.setAttribute("href", `https://quran.com/${sn1_id}/${n1}`)
+                        
+                        } else {
+                          detected_passage.innerHTML = `Surah ${sn1}, Ayat ${n1} - ${n2}`
+                          detected_passage.setAttribute("href", `https://quran.com/${sn1_id}/${n1}-${n2}`)
+                        
+                        }
+                        detected_passage.setAttribute("target", '_blank')
+                      }
+
                   });
 
                   const audioURL = window.URL.createObjectURL(blob);

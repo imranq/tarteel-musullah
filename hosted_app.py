@@ -44,11 +44,11 @@ def transcribe():
 
     audio_file.save(audio_fn)
     audio_data, sr = librosa.load(audio_fn)
-    audio_data = librosa.effects.trim(audio_data)
+    audio_data, index = librosa.effects.trim(audio_data)
 
     # get first 30 seconds
     end_idx = sr*30
-    if len(audio_data) < end_idx:
+    if len(audio_data) > end_idx:
         audio_data = audio_data[:end_idx]
     
     sf.write(audio_fn, audio_data, samplerate=sr)

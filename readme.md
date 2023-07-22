@@ -9,6 +9,11 @@ Download Whisper Tarteel model:
 https://huggingface.co/tarteel-ai/whisper-base-ar-quran
 ```
 
+Download quran.json under assets folder
+```
+wget https://raw.githubusercontent.com/risan/quran-json/main/dist/quran.json
+```
+
 Install NPX: 
 ```
 npm install -g npx
