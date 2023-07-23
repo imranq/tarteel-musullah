@@ -24,7 +24,7 @@ Run Flask Server:
 python3 local_app.py
 ```
 Alternatively, if you set up a OpenAI key, you can do inference with the hosted version of Whisper by setting your environment variable using [this guide](https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety) and then running ```python3 hosted_app.py```
-
+ 
 
 
 Navigate to ```http://127.0.0.1:5000``` to use the app!
