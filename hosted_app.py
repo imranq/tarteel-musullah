@@ -64,9 +64,9 @@ def transcribe():
     audio_data, index = librosa.effects.trim(audio_data)
 
     # get first 30 seconds
-    end_idx = sr*30
-    if len(audio_data) > end_idx:
-        audio_data = audio_data[:end_idx]
+    # end_idx = sr*30
+    # if len(audio_data) > end_idx:
+    #     audio_data = audio_data[:end_idx]
     
     sf.write(audio_fn, audio_data, samplerate=sr)
         
@@ -114,4 +114,4 @@ def transcribe():
     })
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0")
+    app.run()

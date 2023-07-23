@@ -15,7 +15,7 @@ from flask_cors import CORS, cross_origin
 
 from utils import get_close_matches_rapidfuzz, get_compiled_quran
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 cors = CORS(app)
 
 # Load the Hugging Face model and processor
@@ -38,6 +38,11 @@ ayat_arr, ayat_info = get_compiled_quran("assets/quran.json")
 quran_all = " ".join(ayat_arr)
 print("Server ready")
 
+
+@app.route("/", methods=["GET"])
+def home():
+    return app.send_static_file('index.html')
+
 @app.route("/transcribe", methods=["POST"])
 def transcribe():
     # Check if the request contains audio data
@@ -56,9 +61,8 @@ def transcribe():
     audio_data, sr = librosa.load(audio_file.filename)
     inputs = processor.feature_extractor(audio_data, return_tensors="pt", sampling_rate=16_000).input_features.to(device)
     
-
     # Perform transcription
-    _ , tarteel = get_transcription(audio_file.filename, mode="openai")
+    _ , tarteel = get_transcription(audio_data)
 
     print("Time for AI Transcription", time.time() - current_time)
     current_time = time.time()

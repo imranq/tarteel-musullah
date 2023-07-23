@@ -14,22 +14,17 @@ Download quran.json under assets folder
 wget https://raw.githubusercontent.com/risan/quran-json/main/dist/quran.json
 ```
 
-Install NPX: 
+Install Python Requirements
 ```
-npm install -g npx
+pip install -r requirements.txt
 ```
 
 Run Flask Server:
 ```
-python3 transcribe_app.py
+python3 local_app.py
 ```
 
-Run HTTP server to avoid CORs issue:
-```
-npx http-server -p 8000
-```
-
-Navigate to ```localhost:8000``` to use the app!
+Navigate to ```http://127.0.0.1:5000``` to use the app!
 
 ## Todo
 * Split up audio into chunks for processing in parallel (every 3 seconds)
@@ -49,6 +44,7 @@ Navigate to ```localhost:8000``` to use the app!
 * Fix the issue when users repeat a verse that it doesn't 
     * Remove repetitious phrases
 * Look into switching to streamlit
+* Add ability to capture english and arabic
 
 ## Algorithmic approaches
 * Whisper model to transcribe speech to arabic using Tarteel AI
