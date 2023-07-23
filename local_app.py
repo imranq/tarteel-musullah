@@ -10,7 +10,7 @@ import rapidfuzz
 import openai
 import os
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS, cross_origin
 
 from utils import get_close_matches_rapidfuzz, get_compiled_quran
@@ -41,7 +41,7 @@ print("Server ready")
 
 @app.route("/", methods=["GET"])
 def home():
-    return app.send_static_file('index.html')
+    return send_file('index.html')
 
 @app.route("/transcribe", methods=["POST"])
 def transcribe():

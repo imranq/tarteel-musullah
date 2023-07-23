@@ -59,14 +59,11 @@
     }
     
 
-  #transcript, #start_ayat, #end_ayat, #score {
-    margin-top: 40px;
-    font-size: 18px;
-    background: #fff;
-    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
-    padding: 20px;
-    border-radius: 5px;
+  #detected_passage {
+    width: 50%;
+    margin: auto;
   }
+
 
   audio {
     margin: auto;
