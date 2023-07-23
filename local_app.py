@@ -15,7 +15,7 @@ from flask_cors import CORS, cross_origin
 
 from utils import get_close_matches_rapidfuzz, get_compiled_quran
 
-app = Flask(__name__, static_url_path='')
+app = Flask(__name__)
 cors = CORS(app)
 
 # Load the Hugging Face model and processor
@@ -102,6 +102,11 @@ def transcribe():
         "end": selected_ayats[1],
         "string": tarteel
     })
+
+@app.route("/ping-ayat-detect", methods=["GET"])
+def ping():
+    return "AyatDetect Server"
+
 
 if __name__ == "__main__":
     app.run()

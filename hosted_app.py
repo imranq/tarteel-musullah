@@ -113,5 +113,9 @@ def transcribe():
         "string": tarteel
     })
 
+@app.route("/ping-ayat-detect", methods=["GET"])
+def ping():
+    return "AyatDetect Server"
+
 if __name__ == "__main__":
     app.run()
