@@ -29,10 +29,10 @@
     const detected_passage = document.getElementById('detected_passage');
 
 
-    var hosted_url = "https://ec2-3-92-207-212.compute-1.amazonaws.com"
+    var hosted_url = "https://ayatfinder.info"
     var local_url = "http://127.0.0.1:5000"
 
-    var server_url = hosted_url
+    var server_url = local_url
 
     fetch(`${local_url}/ping-ayat-detect`).then((response) => {
       console.log(response)
@@ -89,7 +89,7 @@
 
                   const formData = new FormData();
                   formData.append("audio_data", blob);
-
+                  console.log(`Using ${server_url}`)
                   fetch(`${server_url}/transcribe`, {
                     method: "POST",
                     body: formData,
