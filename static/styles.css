@@ -35,10 +35,17 @@
   
 
   h1 {
-    padding: 50px 0;
+    margin-top: 50px;
     font-size: 2em;
     color: #333;
+    margin-bottom:5px;
     /* text-shadow: 2px 2px 4px rgba(0,0,0,0.5); */
+  }
+
+  #tagline {
+    margin-bottom: 30px;
+    font-style: italic;
+    margin-top:10px;
   }
 
   #status {
@@ -94,4 +101,50 @@
     border-color: #ccc;
     cursor: not-allowed;
   }
-  
+
+  /* Mobile-specific styles */
+@media (max-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  #tagline {
+    font-size: 1em;
+  }
+
+  #status {
+    font-size: 16px;
+  }
+
+  #controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #controls button {
+    width: 100%;
+  }
+}
+
+  /* Footer styles */
+
+  html {
+    height: 100%; /* Make sure the html element takes up the full height of the viewport */
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Use min-height to make sure the body takes at least the full height of the viewport */
+  }
+
+  #footer {
+    margin-top: auto; /* Push the footer to the bottom */
+    background-color: #f2f2f2;
+    padding: 10px;
+  }

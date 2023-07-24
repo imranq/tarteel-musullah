@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AyatDetect - MCGP Invention Club</title>
+  <title>Ayat Finder - Find the ayat recited around you - MCGP Invention Club</title>
   <link rel="stylesheet" type="text/css" href="static/styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
 </head>
 <body>
-  <h1>AyatDetect</h1>
-  <div id="intro">Salaam! Please record a short snippet of Qur'an and get the detected ayat</div>
+  <h1>Ayat Finder</h1>
+  <div id="tagline">Find the ayat recited around you</div>
+  <div id="intro">Salaam! Please record a short snippet of Qur'an and get the ayat</div>
   <div id="controls">
     <button id="startButton">Start Recording</button>
     <button id="stopButton">Stop Recording</button>
@@ -19,6 +21,8 @@
 
   <a id="detected_passage" target="_blank" href="#"></a>
   <div id="output"></div>
+
+  <div id="footer">Brought to you by the MCGP Invention Club</div>
 
   <script>
     const startButton = document.getElementById('startButton');
