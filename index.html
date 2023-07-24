@@ -19,7 +19,7 @@
   <div id="status">Status: Idle</div>
   <audio id="recordedAudio" controls style="display: none;"></audio>
 
-  <div id="link_instructions" style="display: none;">Click to go to Quran.com</div>
+  <div id="link_instructions" style="display: none;"></div>
   <a id="detected_passage" target="_blank" href="#"></a>
   
   <div id="outputWrapper">
@@ -42,6 +42,7 @@
 
     var hosted_url = "https://ayatfinder.info"
     var local_url = "http://127.0.0.1:5000"
+    stopButton.disabled = true;
 
     var server_url = hosted_url
 
