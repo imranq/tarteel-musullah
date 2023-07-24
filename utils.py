@@ -1,4 +1,3 @@
-from cdifflib import CSequenceMatcher
 import json
 import rapidfuzz
 import os
@@ -58,77 +57,6 @@ def perform_alignment_and_counting(tarteel_string, quran_all, ayat_arr, ayat_inf
     }
 
     return output
-
-
-def get_close_matches_rapidfuzz(phrase, ayat_arr, ayat_info):
-    result = []
-    corpus =  " ".join(ayat_arr)
-    current_ayat = 0
-    char_count = 0
-    current_ratio = 0
-
-    for x in range(len(corpus)-len(phrase)):
-        test_phrase = corpus[x: x+len(phrase)]
-
-        if x > char_count + len(ayat_arr[current_ayat]):
-            current_ayat += 1
-            char_count = x
-
-        temp_ratio = rapidfuzz.fuzz.ratio(test_phrase, phrase)
-                
-        if current_ratio < temp_ratio:
-            result.append((temp_ratio, current_ayat))
-            current_ratio = temp_ratio
-            print(current_ratio, ayat_info[current_ayat])
-
-    score, idx = result[-1]
-    
-    end_idx = idx-1
-    target_char_count = char_count + len(phrase)
-    char_x = char_count
-
-    while char_x < target_char_count:
-        char_x += len(ayat_arr[end_idx])
-        end_idx += 1
-        
-
-    return score, ayat_info[idx], ayat_info[end_idx]
-
-
-def get_close_matches_cseq(phrase, ayat_arr, ayat_info):
-    result = []
-    s = CSequenceMatcher()
-    s.set_seq2(phrase)
-    corpus =  " ".join(ayat_arr)
-    current_ayat = 0
-    char_count = 0
-    current_ratio = 0
-    for x in range(len(corpus)-len(phrase)):
-        test_phrase = corpus[x: x+len(phrase)]
-        s.set_seq1(test_phrase)
-
-        if x > char_count + len(ayat_arr[current_ayat]):
-            current_ayat += 1
-            char_count = x
-        
-        temp_ratio = s.ratio()
-        if current_ratio < temp_ratio:
-            result.append((temp_ratio, current_ayat))
-            current_ratio = temp_ratio
-            print(current_ratio, ayat_info[current_ayat])
-
-    score, idx = result[-1]
-    
-    end_idx = idx-1
-    target_char_count = char_count + len(phrase)
-    char_x = char_count
-
-    while char_x < target_char_count:
-        char_x += len(ayat_arr[end_idx])
-        end_idx += 1
-        
-
-    return score, ayat_info[idx], ayat_info[end_idx]
 
 def get_compiled_quran(folder_loc):
     quranjson = json.load(open(os.path.join(folder_loc, "quran.json"), "r", encoding="utf-8"))
