@@ -7,7 +7,7 @@ import rapidfuzz
 import openai
 import os
 import json
-
+from utils import get_compiled_quran, perform_alignment_and_counting
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS, cross_origin
 
@@ -19,25 +19,12 @@ cors = CORS(app)
 openai.api_key = os.environ["OPENAI_API_KEY"]
 print(openai.api_key)
 
-def get_transcription(audio_fn):
+def get_transcription_openai(audio_fn):
     audio_file= open(audio_fn, "rb")
     transcript = openai.Audio.transcribe('whisper-1', audio_file, language="ar")
     return transcript["text"]
         
-quranjson = json.load(open("assets/quran.json", "r", encoding="utf-8"))
-ayat_arr = []
-ayat_info = []
-for surah in quranjson:
-    surah_name = surah["transliteration"]
-    surah_id = surah["id"]
-    for ayat in surah["verses"]:
-        ayat_info.append({
-            "surah_name": surah_name,
-            "surah_id": surah_id,
-            "ayat_number": ayat["id"]
-        })
-        ayat_arr.append(ayat["text"])
-
+ayat_arr, ayat_info = get_compiled_quran("assets")
 quran_all = " ".join(ayat_arr)
 print("Server ready")
 
@@ -70,48 +57,14 @@ def transcribe():
     
     sf.write(audio_fn, audio_data, samplerate=sr)
         
-    current_time = time.time()
-
     # Perform transcription
-    tarteel = get_transcription(audio_fn)
-
+    current_time = time.time()
+    tarteel_string = get_transcription_openai(audio_fn)
     print("Time for AI Transcription", time.time() - current_time)
-    current_time = time.time()
+    
+    output = perform_alignment_and_counting(tarteel_string, quran_all, ayat_arr, ayat_info)
 
-    alignment = rapidfuzz.fuzz.partial_ratio_alignment(tarteel, quran_all)
-
-    print("Time for alignment", time.time() - current_time)
-    current_time = time.time()
-
-    print(tarteel)
-    print(quran_all[alignment.dest_start:alignment.dest_end])
-
-    char_count = 0
-    idx = 0
-    idxs = []
-    while char_count <= alignment.dest_start:
-        char_count += len(ayat_arr[idx]) + 1
-        idx += 1
-
-    idxs.append(idx-1)
-    while char_count <= alignment.dest_end:
-        char_count += len(ayat_arr[idx]) + 1
-        idx += 1
-
-    idxs.append(idx-1)
-
-    print("Time for ayat counting", time.time() - current_time)
-    current_time = time.time()
-
-    selected_ayats = [ayat_info[x] for x in idxs]
-    print(selected_ayats)
-
-    return jsonify({
-        "score": alignment.score,
-        "start": selected_ayats[0],
-        "end": selected_ayats[1],
-        "string": tarteel
-    })
+    return jsonify(output)
 
 @app.route("/ping-ayat-detect", methods=["GET"])
 def ping():

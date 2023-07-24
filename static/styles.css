@@ -55,7 +55,7 @@
     color: #4CAF50;
   }
 
-  #intro {
+  #intro, #outputWrapper {
         font-family: 'Roboto', sans-serif; /* Assuming you have imported the 'Roboto' font */
         color: #34495e;
         background: lavender;
@@ -64,6 +64,19 @@
         margin-bottom: 20px; /* Adds some space below the title */
         letter-spacing: 2px;
     }
+
+  .highlight {
+    font-weight: bold;
+    color: darkgreen;
+  }
+  #output {
+    width: 60%;
+    margin: auto;
+  }
+
+  #raw {
+    font: 10px;
+  }
     
 
   #detected_passage {
@@ -101,7 +114,10 @@
     border-color: #ccc;
     cursor: not-allowed;
   }
-
+  #link_instructions {
+    font-size: 14px;
+    width: 40%;
+  }
   /* Mobile-specific styles */
 @media (max-width: 768px) {
   body {

@@ -7,7 +7,7 @@
 
 </head>
 <body>
-  <h1>Ayat Finder</h1>
+  <h1>Ayat Finder (beta)</h1>
   <div id="tagline">Find the ayat recited around you</div>
   <div id="intro">Salaam! Please record a short snippet of Qur'an and get the ayat</div>
   <div id="controls">
@@ -19,9 +19,14 @@
   <div id="status">Status: Idle</div>
   <audio id="recordedAudio" controls style="display: none;"></audio>
 
+  <div id="link_instructions" style="display: none;">Click to go to Quran.com</div>
   <a id="detected_passage" target="_blank" href="#"></a>
-  <div id="output"></div>
-
+  
+  <div id="outputWrapper">
+    <div id="output"></div>
+  </div>
+  
+  <div id="raw"></div>
   <div id="footer">Brought to you by the MCGP Invention Club</div>
 
   <script>
@@ -31,6 +36,8 @@
     const output = document.getElementById('output');
     const recordedAudio = document.getElementById('recordedAudio');
     const detected_passage = document.getElementById('detected_passage');
+    const link_instructions = document.getElementById('link_instructions');
+    const rawEl = document.getElementById('raw');
 
 
     var hosted_url = "https://ayatfinder.info"
@@ -70,6 +77,9 @@
         stopButton.disabled = false;
         recordedAudio.style.display = 'none';
         detected_passage.innerHTML = '';
+        rawEl.innerHTML = '';
+        link_instructions.style.display = 'none'
+        
       
         navigator.mediaDevices.getUserMedia({ audio: true })
             .then(stream => {
@@ -106,13 +116,31 @@
                       sn2 = result["end"]["surah_name"]
                       n1 = result["start"]["ayat_number"]
                       n2 = result["end"]["ayat_number"]
+                      score = result["score"]
+
+                      p1 = result["quran_portion_idx_start"]
+                      p2 = result["quran_portion_idx_end"]
+                      
+                      ayat_portion_with_highlights  = []
+                      ayat_portion_with_highlights.push(result["ayat_portion"].slice(0,p1))
+                      ayat_portion_with_highlights.push('<span class="highlight">')
+                      ayat_portion_with_highlights.push(result["ayat_portion"].slice(p1,p2))
+                      ayat_portion_with_highlights.push('</span>')
+                      ayat_portion_with_highlights.push(result["ayat_portion"].slice(p2))
+
                       output.innerHTML = `
-                      <p>Detected String: ${result["string"]}</p>
-                      \n\n
+                      <p>Speech Transcript: <br> ${result["transcribed_portion"]}</p>
+                      <p>Found Ayat: <br> ${ayat_portion_with_highlights.join("")}</p>
+                      <p>Translation (Khattab): <br> ${result["translation_portion"]}</p>
+                      `;
+
+                      rawEl.innerHTML = `
                       <p>Start: ${sn1} ${n1} </p>
                       \n
                       <p>End: ${sn2} ${n2} </p>
-                      `;
+                      \n
+                      <p>Confidence: ${Math.round(score)} </p>
+                      `
                       status.textContent = 'Status: Idle';
                       
 
@@ -121,7 +149,7 @@
                         detected_passage.setAttribute("href", `#`)
                         detected_passage.setAttribute("target", '')
                       } else {
-                        if (n1 == n2) {
+                        if (n1 == n2) {                          
                           detected_passage.innerHTML = `Surah ${sn1}, Ayat ${n1}`
                           detected_passage.setAttribute("href", `https://quran.com/${sn1_id}/${n1}`)
                         
@@ -131,6 +159,7 @@
                         
                         }
                         detected_passage.setAttribute("target", '_blank')
+                        link_instructions.style.display = 'block'
                       }
 
                   });

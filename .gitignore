@@ -4,5 +4,4 @@ whisper-base-ar-quran/*
 *.wav
 use-whisper/*
 blob
-quran.json
 openai-api-testing.ipynb
